@@ -1,4 +1,11 @@
 {
-    "prettier.configPath": "",
-    "files.eol": "auto"
+  "prettier.configPath": "",
+  "files.eol": "auto",
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.organizeImports": true,
+    "source.sortMembers": true
+  },
+  "editor.defaultFormatter": null
 }
