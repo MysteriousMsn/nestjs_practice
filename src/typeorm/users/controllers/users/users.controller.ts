@@ -4,11 +4,14 @@ import {
   Delete,
   Get,
   Param,
+  ParseArrayPipe,
   ParseIntPipe,
   Post,
   Put
 } from '@nestjs/common';
 import { CreateUserDto } from 'src/typeorm/dtos/CreateUser.dto';
+import { CreateUserHeroDto } from 'src/typeorm/dtos/CreateUserHero.dto';
+import { CreateUserMovieDto } from 'src/typeorm/dtos/CreateUserMovie.dto';
 import { CreateUserPostDto } from 'src/typeorm/dtos/CreateUserPost.dto';
 import { CreateUserProfileDto } from 'src/typeorm/dtos/CreateUserProfile.dto';
 import { UpdateUserDto } from 'src/typeorm/dtos/UpdateUser.dto';
@@ -55,5 +58,17 @@ export class UsersController {
     @Body() createUserPostDto: CreateUserPostDto,
   ) {
     return this.userServce.createUserPost(id, createUserPostDto);
+  }
+
+  @Post('heroes')
+  createUserHero(@Body() createUserHeroDto: CreateUserHeroDto) {
+    return this.userServce.createUserHero(createUserHeroDto);
+  }
+  @Post('movies/:heroIds')
+  createUserMovie(
+    @Param('heroIds', ParseArrayPipe) heroIds: Array<number>,
+    @Body() createUserMovieDto: CreateUserMovieDto,
+  ) {
+    return this.userServce.createUserMovie(heroIds, createUserMovieDto);
   }
 }

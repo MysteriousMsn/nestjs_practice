@@ -20,3 +20,9 @@ export type CreateUserPostParams = {
   title: string;
   description: string;
 };
+export type CreateUserHeroParams = {
+  name: string;
+};
+export type CreateUserMovieParams = {
+  name: string;
+};

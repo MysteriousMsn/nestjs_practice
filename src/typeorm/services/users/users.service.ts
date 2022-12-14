@@ -1,15 +1,19 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Hero } from 'src/typeorm/entities/Hero';
+import { Movie } from 'src/typeorm/entities/Movie';
 import { Post } from 'src/typeorm/entities/Post';
 import { Profile } from 'src/typeorm/entities/Profile';
 import { User } from 'src/typeorm/entities/User';
 import {
+  CreateUserHeroParams,
+  CreateUserMovieParams,
   CreateUserParams,
   CreateUserPostParams,
   CreateUserProfileParams,
   UpdateUserParams
 } from 'src/utils/types';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
@@ -17,6 +21,8 @@ export class UsersService {
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Profile) private profileRepository: Repository<Profile>,
     @InjectRepository(Post) private postRepository: Repository<Post>,
+    @InjectRepository(Movie) private movieRepository: Repository<Movie>,
+    @InjectRepository(Hero) private heroRepository: Repository<Hero>,
   ) {}
   findUsers() {
     return this.userRepository.find({ relations: ['profile', 'posts'] });
@@ -63,5 +69,27 @@ export class UsersService {
       user,
     });
     return this.postRepository.save(newPost);
+  }
+
+  async createUserHero(createUserHeroDetails: CreateUserHeroParams) {
+    const newHero = this.heroRepository.create({
+      ...createUserHeroDetails,
+    });
+    return this.heroRepository.save(newHero);
+  }
+
+  async createUserMovie(
+    heroIds: Array<number>,
+    createUserMovieDetails: CreateUserMovieParams,
+  ) {
+    const heroes = await this.heroRepository.findBy({ id: In(heroIds) });
+    if (!heroes && !heroes.length) {
+      throw new HttpException('hero not found', HttpStatus.BAD_REQUEST);
+    }
+    const newMovie = this.movieRepository.create({
+      ...createUserMovieDetails,
+    });
+    newMovie.heroes = heroes;
+    return this.movieRepository.save(newMovie);
   }
 }
