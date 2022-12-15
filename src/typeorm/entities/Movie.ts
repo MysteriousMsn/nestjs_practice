@@ -15,7 +15,10 @@ export class Movie {
   @Column()
   name: string;
 
-  @ManyToMany(() => Hero, (hero) => hero.movies)
+  @ManyToMany(() => Hero, (hero) => hero.movies, {
+    cascade: true,
+    eager: true,
+  })
   @JoinTable()
   heroes: Hero[];
 }

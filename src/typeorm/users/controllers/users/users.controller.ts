@@ -71,4 +71,12 @@ export class UsersController {
   ) {
     return this.userServce.createUserMovie(heroIds, createUserMovieDto);
   }
+  @Get('movies')
+  getMovies() {
+    return this.userServce.findMovies();
+  }
+  @Get('heroes')
+  getHeroes() {
+    return this.userServce.findHeroes();
+  }
 }

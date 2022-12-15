@@ -92,4 +92,41 @@ export class UsersService {
     newMovie.heroes = heroes;
     return this.movieRepository.save(newMovie);
   }
+  findMovies() {
+    // no need to add relation as eager loading is enabled in the movie schema
+    // eager can be enabled one side only either on movies or heroes schema
+    // if eager enabled in movie then it will reflect in the heroes like heroes -> movies -> heroes, so heroes will be repeated
+    return this.movieRepository.find();
+  }
+  findHeroes() {
+    // return this.heroRepository.find({
+    //   select: {
+    //     name: true,
+    //   },
+    //   where: {
+    //     name: 'hero one',
+    //   },
+    //   relations: ['movies'],
+    // });
+
+    // using SELECT,OR, RELATIONS, ORDER, WITHDELETED SKIP, TAKE, CACHE methods.
+    //skip and take doesnot work if we do not select id, relations is dependent on the id in select paramenter
+
+    return this.heroRepository.find({
+      select: {
+        id: true,
+        name: true,
+      },
+      relations: { movies: true },
+      where: [{ name: 'hero one' }, { name: 'hero two' }],
+      order: {
+        name: 'DESC',
+        id: 'ASC',
+      },
+      skip: 1,
+      take: 1,
+      cache: true,
+      withDeleted: true,
+    });
+  }
 }
