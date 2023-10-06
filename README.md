@@ -32,6 +32,15 @@
 $ npm install
 ```
 
+## some nestjs commands to start
+
+-to start server with yarn - yarn start:dev
+-to create new project structure - nest new <project name>
+-to show all command available - nest generate --help
+-to generate module - nest generate module users
+-to generate controller by giving path - nest generate controller /users/controllers/users
+-to generate services - nest g s /users/services/users
+
 ## Running the app
 
 ```bash
