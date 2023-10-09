@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   Column,
   Entity,
@@ -17,6 +18,7 @@ export class User {
   @Column({ unique: true })
   username: string;
 
+  @Exclude()
   @Column()
   password: string;
 
@@ -32,4 +34,8 @@ export class User {
 
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
+
+  constructor(partial: Partial<User>) {
+    Object.assign(this, partial);
+  }
 }

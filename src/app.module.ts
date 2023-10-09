@@ -1,3 +1,4 @@
+import { CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Hero } from './typeorm/entities/Hero';
@@ -22,6 +23,9 @@ import { UsersModule } from './users/users.module';
       synchronize: true,
     }),
     TypeormModule,
+    CacheModule.register({
+      isGlobal: true
+    })
   ],
   controllers: [],
   providers: [],

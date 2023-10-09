@@ -1,5 +1,7 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Cache } from 'cache-manager';
 import { Hero } from 'src/typeorm/entities/Hero';
 import { Movie } from 'src/typeorm/entities/Movie';
 import { Post } from 'src/typeorm/entities/Post';
@@ -23,9 +25,23 @@ export class UsersService {
     @InjectRepository(Post) private postRepository: Repository<Post>,
     @InjectRepository(Movie) private movieRepository: Repository<Movie>,
     @InjectRepository(Hero) private heroRepository: Repository<Hero>,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache
   ) {}
-  findUsers() {
-    return this.userRepository.find({ relations: ['profile', 'posts'] });
+  async findUsers() {
+    let users: User[] = await this.cacheManager.get('typeorm:users');
+    if(!users?.length){
+      users = await this.userRepository.find({ relations: ['profile', 'posts'] });
+      await this.cacheManager.set('typeorm:users', users, 20000);
+    }
+    return users;
+  }
+  async findUser(id: number) {
+    let user: User = await this.cacheManager.get('typeorm:user');
+    if(!user){
+      user = await this.userRepository.findOneBy({ id });
+      await this.cacheManager.set('typeorm:user', user, 1000);
+    }
+    return user;
   }
 
   createUser(userDetails: CreateUserParams) {

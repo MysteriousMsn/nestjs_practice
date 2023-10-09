@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -7,7 +8,8 @@ import {
   ParseArrayPipe,
   ParseIntPipe,
   Post,
-  Put
+  Put,
+  UseInterceptors
 } from '@nestjs/common';
 import { CreateUserDto } from 'src/typeorm/dtos/CreateUser.dto';
 import { CreateUserHeroDto } from 'src/typeorm/dtos/CreateUserHero.dto';
@@ -22,8 +24,17 @@ export class UsersController {
   constructor(private userServce: UsersService) {}
 
   @Get()
-  getUsers() {
-    return this.userServce.findUsers();
+  async getUsers() {
+    return await this.userServce.findUsers();
+  }
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Get(':id')
+  async getUser(
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    //password field will not be available in the reponse due to exclude decorator in the schema
+    // and UserInterpretors decorator
+    return await this.userServce.findUser(id);
   }
 
   @Post()
