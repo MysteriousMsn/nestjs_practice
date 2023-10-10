@@ -3,14 +3,19 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Delete,
+  FileTypeValidator,
   Get,
+  MaxFileSizeValidator,
   Param,
   ParseArrayPipe,
+  ParseFilePipe,
   ParseIntPipe,
   Post,
   Put,
+  UploadedFile,
   UseInterceptors
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateUserDto } from 'src/typeorm/dtos/CreateUser.dto';
 import { CreateUserHeroDto } from 'src/typeorm/dtos/CreateUserHero.dto';
 import { CreateUserMovieDto } from 'src/typeorm/dtos/CreateUserMovie.dto';
@@ -89,5 +94,17 @@ export class UsersController {
   @Get('heroes')
   getHeroes() {
     return this.userServce.findHeroes();
+  }
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadFile(@UploadedFile(
+    new ParseFilePipe({
+      validators: [
+        new MaxFileSizeValidator({ maxSize: 1000 * 1000 }), // max side is set to 1 mb
+        new FileTypeValidator({ fileType: 'image/png' }),
+      ],
+    }),
+  ) file: Express.Multer.File) {
+    console.log(file);
   }
 }
