@@ -12,6 +12,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Render,
   UploadedFile,
   UseInterceptors
 } from '@nestjs/common';
@@ -87,15 +88,15 @@ export class UsersController {
   ) {
     return this.userServce.createUserMovie(heroIds, createUserMovieDto);
   }
-  @Get('movies')
+  @Get('movies/get')
   getMovies() {
     return this.userServce.findMovies();
   }
-  @Get('heroes')
+  @Get('heroes/get')
   getHeroes() {
     return this.userServce.findHeroes();
   }
-  @Post('upload')
+  @Post('upload/image')
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(@UploadedFile(
     new ParseFilePipe({
@@ -106,5 +107,10 @@ export class UsersController {
     }),
   ) file: Express.Multer.File) {
     console.log(file);
+  }
+  @Get('render/page')
+  @Render('index')
+  root() {
+    return { message: 'Hello world!' };
   }
 }
