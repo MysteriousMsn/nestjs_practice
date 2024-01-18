@@ -17,6 +17,7 @@ import {
   UseInterceptors
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Cron } from '@nestjs/schedule';
 import { CreateUserDto } from 'src/typeorm/dtos/CreateUser.dto';
 import { CreateUserHeroDto } from 'src/typeorm/dtos/CreateUserHero.dto';
 import { CreateUserMovieDto } from 'src/typeorm/dtos/CreateUserMovie.dto';
@@ -112,5 +113,9 @@ export class UsersController {
   @Render('index')
   root() {
     return { message: 'Hello world!' };
+  }
+  @Cron('45 * * * * *')
+  handleCron() {
+    console.log('Called when the current second is 45');
   }
 }

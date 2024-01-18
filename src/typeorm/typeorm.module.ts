@@ -1,3 +1,4 @@
+import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -26,6 +27,12 @@ import { UsersController } from './users/controllers/users/users.controller';
           },
         }),
       }),
+    }),
+    BullModule.registerQueue({
+      name: 'audio',
+      redis: {
+        port: 6380,
+      },
     })
   ],
   controllers: [UsersController],

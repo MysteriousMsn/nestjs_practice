@@ -1,6 +1,8 @@
+import { InjectQueue } from '@nestjs/bull';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Queue } from 'bull';
 import { Cache } from 'cache-manager';
 import { Hero } from 'src/typeorm/entities/Hero';
 import { Movie } from 'src/typeorm/entities/Movie';
@@ -25,7 +27,8 @@ export class UsersService {
     @InjectRepository(Post) private postRepository: Repository<Post>,
     @InjectRepository(Movie) private movieRepository: Repository<Movie>,
     @InjectRepository(Hero) private heroRepository: Repository<Hero>,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    @InjectQueue('audio') private audioQueue: Queue
   ) {}
   async findUsers() {
     let users: User[] = await this.cacheManager.get('typeorm:users');
