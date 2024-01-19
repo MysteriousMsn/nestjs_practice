@@ -1,7 +1,7 @@
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { QueueController } from './controllers/queue.controller';
-import { TextConsumer, VideoConsumer } from './processor/queue.processor';
+import { DynamicConsumer, VideoConsumer } from './processor/queue.processor';
 
 @Module({
   imports: [
@@ -10,14 +10,14 @@ import { TextConsumer, VideoConsumer } from './processor/queue.processor';
         name: 'video',
       },
       {
-        name: 'text',
+        name: 'dynamic',
       }
     ),
   ],
   controllers: [QueueController],
   providers: [
     VideoConsumer,
-    TextConsumer,
+    DynamicConsumer,
   ],
 })
 export class QueueModule {}

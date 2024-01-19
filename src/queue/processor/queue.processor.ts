@@ -10,11 +10,11 @@ export class VideoConsumer {
     console.log('completed!!');
   }
 }
-@Processor('text')
-export class TextConsumer {
-  @Process('text-job')
-  handleTransvideo(job: Job) {
-    console.log('Start text compress into mp4...');
+@Processor('dynamic')
+export class DynamicConsumer {
+  @Process('dynamic-job')
+  handleDynamic(job: Job) {
+    console.log('dynamic task queue processing started...');
     console.log(job.data);
     console.log('completed!!');
   }
