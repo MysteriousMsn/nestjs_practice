@@ -5,6 +5,7 @@ import { MulterModule } from '@nestjs/platform-express';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { diskStorage } from 'multer';
+import { QueueModule } from './queue/queue.module';
 import { Hero } from './typeorm/entities/Hero';
 import { Movie } from './typeorm/entities/Movie';
 import { Post } from './typeorm/entities/Post';
@@ -16,6 +17,7 @@ import { UsersModule } from './users/users.module';
 @Module({
   imports: [
     UsersModule,
+    QueueModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
